@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 반드시 작성! -->
+<mapper namespace="Member">
+    <select id="duplicate" resultType="member" parameterType="String">
+        select * from member_table where memberEmail = #{memberEmail}
+    </select>
+
+    <insert id="save" parameterType="member" useGeneratedKeys="true" keyProperty="id">
+        insert into member_table(memberEmail, memberPassword, memberName, memberMobile)
+        values(#{memberEmail}, #{memberPassword}, #{memberName}, #{memberMobile})
+    </insert>
+
+    <insert id="saveFile" parameterType="memberFile">
+        insert into member_profile_table(originalFileName, storedFileName, memberId)
+        values(#{originalFileName}, #{storedFileName}, #{memberId})
+    </insert>
+
+    <select id="login" parameterType="member" resultType="member">
+        select * from member_table where memberEmail=#{memberEmail} and memberPassword=#{memberPassword}
+    </select>
+
+    <select id="findAll" resultType="member">
+        select * from member_table where not memberEmail='admin'
+    </select>
+
+    <delete id="delete" parameterType="Long">
+        delete from member_table where id = #{id}
+    </delete>
+
+    <select id="findById" parameterType="Long" resultType="member">
+        select * from member_table where id=#{id}
+    </select>
+
+    <select id="findFileById" parameterType="Long" resultType="memberFile">
+        select * from member_profile_table where memberId = #{memberId}
+    </select>
+</mapper>
