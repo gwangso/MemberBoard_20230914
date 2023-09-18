@@ -16,6 +16,7 @@
 
     <%-- bootstrap, styleSheet --%>
     <link rel="stylesheet" href="/resources/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/resources/css/style.css">
 
     <style>
@@ -28,14 +29,14 @@
 <jsp:include page="../header.jsp"/>
 <div class="row m-5">
     <div class="col">
-        <div class="card p-4">
+        <div class="card p-4" style="width: 800px">
             <div class="row">
                 <div class="col-6">
                     <c:if test="${empty memberFile}">
-                        <img id="none-profile" src="http://placehold.it/150X150">
+                        <img id="none-profile" src="http://placehold.it/150X150" width="300px">
                     </c:if>
                     <c:if test="${not empty memberFile}">
-                        <a href="${pageContext.request.contextPath}/profile/${memberFile.storedFileName}" target="_blank"><img id="profile" src="${pageContext.request.contextPath}/profile/${memberFile.storedFileName}" width="100%"></a>
+                        <a href="${pageContext.request.contextPath}/profile/${memberFile.storedFileName}" target="_blank"><img id="profile" src="${pageContext.request.contextPath}/profile/${memberFile.storedFileName}" width="300px"></a>
                     </c:if>
                 </div>
                 <div class="col-6 ps-2">

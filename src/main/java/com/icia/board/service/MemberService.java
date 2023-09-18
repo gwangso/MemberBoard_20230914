@@ -70,7 +70,28 @@ public class MemberService {
         return memberRepository.findFileById(memberId);
     }
 
-    public void update(MemberDTO memberDTO) {
-        
+    public void update(MemberDTO memberDTO) throws IOException {
+        if (!memberDTO.getMemberProfile().isEmpty()){
+            MemberFileDTO memberFileDTO = memberRepository.findFileById(memberDTO.getId());
+            MultipartFile memberProfile = memberDTO.getMemberProfile();
+            String originalFileName = memberProfile.getOriginalFilename();
+
+            //기존 파일 삭제
+            File file = new File("D:\\spring_img\\profile\\" +memberFileDTO.getStoredFileName());
+            file.delete();
+
+            UUID uuid = UUID.randomUUID();
+            String pid = uuid.toString().substring(0,15);
+
+            String storedFileName = pid + "_" + originalFileName;
+            memberFileDTO.setOriginalFileName(originalFileName);
+            memberFileDTO.setStoredFileName(storedFileName);
+
+            String savePath = "D:\\spring_img\\profile\\"+storedFileName;
+            memberProfile.transferTo(new File(savePath));
+
+            memberRepository.updateProfile(memberFileDTO);
+        }
+        memberRepository.update(memberDTO);
     }
 }

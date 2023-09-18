@@ -37,4 +37,16 @@
     <select id="findFileById" parameterType="Long" resultType="memberFile">
         select * from member_profile_table where memberId = #{memberId}
     </select>
+
+    <update id="updateMember" parameterType="member">
+        update member_table
+        set memberEmail=#{memberEmail}, memberPassword=#{memberPassword}, memberName=#{memberName}, memberMobile=#{memberMobile}
+        where id=#{id}
+    </update>
+
+    <update id="updateProfile" parameterType="memberFile">
+        update member_profile_table
+        set originalFileName=#{originalFileName}, storedFileName=#{storedFileName}
+        where id=#{id} and memberId=#{memberId}
+    </update>
 </mapper>

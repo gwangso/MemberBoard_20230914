@@ -98,8 +98,9 @@ public class MemberController {
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute MemberDTO memberDTO){
+    public String update(@ModelAttribute MemberDTO memberDTO) throws IOException {
+        System.out.println(memberDTO);
         memberService.update(memberDTO);
-        return "redirect:/member/detail";
+        return "redirect:/member/detail?id="+memberDTO.getId();
     }
 }

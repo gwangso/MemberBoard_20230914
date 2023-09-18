@@ -20,7 +20,6 @@ public class MemberRepository {
 
     public MemberDTO save(MemberDTO memberDTO) {
         sql.insert("Member.save", memberDTO);
-        System.out.println(memberDTO);
         return memberDTO;
     }
 
@@ -46,5 +45,13 @@ public class MemberRepository {
 
     public MemberFileDTO findFileById(Long memberId) {
         return sql.selectOne("Member.findFileById",memberId);
+    }
+
+    public void update(MemberDTO memberDTO) {
+        sql.update("Member.updateMember", memberDTO);
+    }
+
+    public void updateProfile(MemberFileDTO memberFileDTO) {
+        sql.update("Member.updateProfile", memberFileDTO);
     }
 }

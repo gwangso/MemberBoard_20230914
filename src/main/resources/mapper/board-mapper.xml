@@ -4,5 +4,39 @@
 
 <!-- namespace 반드시 작성! -->
 <mapper namespace="Board">
+    <insert id="save" parameterType="board" useGeneratedKeys="true" keyProperty="id">
+        insert into board_table(boardTitle, boardWriter, boardContents, fileAttached)
+        values (#{boardTitle}, #{boardWriter}, #{boardContents}, #{fileAttached})
+    </insert>
 
+    <insert id="saveFile" parameterType="boardFile">
+        insert into board_file_table(originalFileName, storedFileName, boardId)
+        values (#{originalFileName}, #{storedFileName}, #{boardId})
+    </insert>
+
+    <select id="findAll" resultType="board">
+        select id, boardTitle, boardWriter,
+               boardHits, date_format(createdAt, "%y-%m-%d %H:%i:%s") as createdAt
+        from board_table
+    </select>
+
+    <select id="findById" resultType="board" parameterType="Long">
+        select id, boardTitle, boardWriter, boardContents,
+               boardHits, date_format(createdAt, "%y-%m-%d %H:%i:%s") as createdAt, fileAttached
+        from board_table where id=#{id}
+    </select>
+
+    <select id="findFileById" resultType="boardFile" parameterType="Long">
+        select * from board_file_table where boardId=#{boardId}
+    </select>
+
+    <update id="updateHits" parameterType="Long">
+        update board_table
+        set boardHits = boardHits + 1
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        delete from board_table where id=#{id}
+    </delete>
 </mapper>
