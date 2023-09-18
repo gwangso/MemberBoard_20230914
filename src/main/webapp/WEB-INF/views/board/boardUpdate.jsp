@@ -45,12 +45,11 @@
             <div class="input-group">
                 <span class="input-group-text">파일목록</span>
                 <c:forEach items="${boardFileList}" var="boardFile">
-                    ${boardFile.originalFileName}<img src="/resources/icon/x-square-fill.svg" style="cursor:pointer" onclick="delete_image(${boardFile.storedFileName})">
-                </c:forEach>
+                    ${boardFile.originalFileName}<img src="/resources/icon/x-square-fill.svg" style="cursor:pointer" onclick="delete_image(${boardFile.storedFileName})">                </c:forEach>
             </div>
             <input name="boardFiles" type="file" class="form-control" multiple>
             <div>
-                <input type="submit" class="btn btn-primary" value="글작성">
+                <input type="submit" class="btn btn-primary" value="수정">
                 <input type="button" class="btn btn-secondary" value="취소" onclick="to_list()">
             </div>
         </form>
@@ -60,10 +59,29 @@
 <jsp:include page="../footer.jsp"/>
 </body>
 <script>
-    const delete_image = (stoaredFileName) =>{
-        $.ajax({
+    let deleteImageList = [];
 
+    $("#board-update").on("submit", function(){
+        const id = '${board.id}';
+        const boardTitle = $(boardUpdate.boardTitle).val();
+        const boardContents = $(boardUpdate.boardContents).val();
+        $.ajax({
+            type:"post",
+            url:"/board/update",
+            data:{id:id, boardTitle:boardTitle, boardContents:boardContents,deleteImageList:deleteImageList},
+            success:function(data){
+                if(data){
+                    location.href = "/board/detail?id="${board.id};
+                }
+            },
+            error:function(err){
+
+            }
         })
+    });
+
+    const delete_image = (storedFileName) =>{
+        deleteImageList.push(storedFileName);
     }
 </script>
 </html>

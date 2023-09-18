@@ -70,8 +70,10 @@ public class BoardController {
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute BoardDTO boardDTO,
+    public @ResponseBody boolean update(@ModelAttribute BoardDTO boardDTO,
+                         @RequestParam(value = "deleteImageList", required = false) List<String> deleteImageList,
                          Model model) throws IOException {
-        boardService.update(boardDTO);
+        boardService.update(boardDTO,deleteImageList);
+        return true;
     }
 }
