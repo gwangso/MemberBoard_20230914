@@ -68,4 +68,10 @@ public class BoardController {
         model.addAttribute("boardFileList", boardFileDTOList);
         return "board/boardUpdate";
     }
+
+    @PostMapping("/update")
+    public String update(@ModelAttribute BoardDTO boardDTO,
+                         Model model) throws IOException {
+        boardService.update(boardDTO);
+    }
 }

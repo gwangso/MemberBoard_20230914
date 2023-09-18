@@ -6,6 +6,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <html>
 <head>
     <title>Title</title>
@@ -24,7 +26,7 @@
 <jsp:include page="../header.jsp"/>
 <div class="row m-5">
     <div class="col">
-        <form id="board-save" name="boardSave" method="post" action="/board/save" enctype="multipart/form-data">
+        <form id="board-update" name="boardUpdate" method="post" action="/board/update" enctype="multipart/form-data">
             <div class="input-group">
                 <span class="input-group-text">글번호</span>
                 <input name="id" type="text" class="form-control" value="${board.id}">
@@ -40,6 +42,12 @@
                 <span class="input-group-text">내용</span>
                 <textarea name="boardContents" type="text" class="form-control" value="${board.boardContents}"></textarea>
             </div>
+            <div class="input-group">
+                <span class="input-group-text">파일목록</span>
+                <c:forEach items="${boardFileList}" var="boardFile">
+                    ${boardFile.originalFileName}<img src="/resources/icon/x-square-fill.svg" style="cursor:pointer" onclick="delete_image(${boardFile.storedFileName})">
+                </c:forEach>
+            </div>
             <input name="boardFiles" type="file" class="form-control" multiple>
             <div>
                 <input type="submit" class="btn btn-primary" value="글작성">
@@ -51,4 +59,11 @@
 <hr>
 <jsp:include page="../footer.jsp"/>
 </body>
+<script>
+    const delete_image = (stoaredFileName) =>{
+        $.ajax({
+
+        })
+    }
+</script>
 </html>
