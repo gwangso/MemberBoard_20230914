@@ -22,7 +22,7 @@
 <jsp:include page="../header.jsp"/>
 <div class="row m-5">
     <div class="col">
-        <table id="" class="table">
+        <table id="member-list" class="table" >
             <tr class="table-dark">
                 <th>회원번호</th>
                 <th>회원이메일</th>

@@ -14,10 +14,18 @@
         values (#{originalFileName}, #{storedFileName}, #{boardId})
     </insert>
 
-    <select id="findAll" resultType="board">
+    <select id="findAll" parameterType="java.util.HashMap" resultType="board">
+        select id, boardTitle, boardWriter,
+               boardHits, date_format(createdAt, "%y-%m-%d %H:%i:%s") as createdAt
+        from board_table order by id desc limit #{start},#{limit}
+    </select>
+
+    <select id="searchList" parameterType="java.util.HashMap" resultType="board">
         select id, boardTitle, boardWriter,
                boardHits, date_format(createdAt, "%y-%m-%d %H:%i:%s") as createdAt
         from board_table
+        where ${type} like concat('%',#{query},'%') order by id desc
+        limit #{start},#{limit}
     </select>
 
     <select id="findById" resultType="board" parameterType="Long">
@@ -52,5 +60,13 @@
 
     <select id="countFile" parameterType="Long" resultType="Integer">
         select count(*) from board_file_table where boardId=#{boardId}
+    </select>
+
+    <select id="count" resultType="Integer">
+        select count(id) from board_table
+    </select>
+
+    <select id="searchCount" resultType="Integer" parameterType="java.util.HashMap">
+        select count(*) from board_table where ${type} like #{query}
     </select>
 </mapper>

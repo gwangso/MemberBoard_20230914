@@ -23,6 +23,15 @@
     <div class="row m-5">
         <div class="col">
             <h1>메인</h1>
+            <div class="row justify-content-center">
+                <div class="col col-md-8 col-xl-6">
+                    <div class="input-group">
+                        <span class="input-group-text">글찾기</span>
+                        <input class="form-control">
+                        <button class="btn btn-primary"></button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <hr>

@@ -2,6 +2,7 @@ package com.icia.board.controller;
 
 import com.icia.board.dto.BoardDTO;
 import com.icia.board.dto.BoardFileDTO;
+import com.icia.board.dto.PageDTO;
 import com.icia.board.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,9 +37,24 @@ public class BoardController {
     }
 
     @GetMapping("/list")
-    public String findAll(Model model){
-        List<BoardDTO> boardDTOList = boardService.findAll();
+    public String findAll(@RequestParam(value="query", required = false, defaultValue = "") String query,
+                          @RequestParam(value="type", required = false, defaultValue = "boardTitle") String type,
+                          @RequestParam(value="page", required = false, defaultValue = "1") int page,
+                          Model model){
+        List<BoardDTO> boardDTOList = null;
+        PageDTO pageDTO = null;
+        if(query.equals("")){
+            boardDTOList = boardService.findAll(page);
+            pageDTO = boardService.pageNumber(page);
+        }else {
+            boardDTOList = boardService.searchList(query,type,page);
+            pageDTO = boardService.searchPageNumber(query,type,page);
+        }
         model.addAttribute("boardList", boardDTOList);
+        model.addAttribute("query", query);
+        model.addAttribute("type", type);
+        model.addAttribute("page",page);
+        model.addAttribute("paging",pageDTO);
         return "board/boardList";
     }
 

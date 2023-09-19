@@ -2,6 +2,7 @@ package com.icia.board.service;
 
 import com.icia.board.dto.BoardDTO;
 import com.icia.board.dto.BoardFileDTO;
+import com.icia.board.dto.PageDTO;
 import com.icia.board.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +10,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BoardService {
@@ -39,8 +42,13 @@ public class BoardService {
         }
     }
 
-    public List<BoardDTO> findAll() {
-        return boardRepository.findAll();
+    public List<BoardDTO> findAll(int page) {
+        int pagelimit = 5;
+        int pagingStart = (page -1) * pagelimit;
+        Map<String, Integer> pagingParams = new HashMap<>();
+        pagingParams.put("limit", pagelimit);
+        pagingParams.put("start", pagingStart);
+        return boardRepository.findAll(pagingParams);
     }
 
     public BoardDTO findById(Long id) {
@@ -90,5 +98,65 @@ public class BoardService {
                 boardRepository.saveFile(boardFileDTO);
             }
         }
+    }
+
+    public List<BoardDTO> searchList(String query, String type, int page) {
+        int pagelimit = 5;
+        int pagingStart = (page -1) * pagelimit;
+        Map<String, Object> searchParams = new HashMap<>();
+        searchParams.put("limit", pagelimit);
+        searchParams.put("start", pagingStart);
+        searchParams.put("query", query);
+        searchParams.put("type", type);
+        return boardRepository.searchList(searchParams);
+    }
+
+    public PageDTO pageNumber(int page) {
+        int pagelimit = 5;
+        int blockLimit = 5;
+        int boardCount = boardRepository.boardCount();
+        int maxPage = (int)(Math.ceil((double) boardCount/pagelimit));
+
+        int startPage =1;
+        int endPage =maxPage;
+
+        if(maxPage>blockLimit){
+            endPage = page + blockLimit/2;
+            if (endPage>maxPage) endPage=maxPage;
+            startPage = endPage - blockLimit + 1;
+        }
+        System.out.printf("%d,%d,%d\n",startPage,endPage,maxPage);
+        PageDTO pageDTO = new PageDTO();
+        pageDTO.setPage(page);
+        pageDTO.setMaxPage(maxPage);
+        pageDTO.setStartPage(startPage);
+        pageDTO.setEndPage(endPage);
+        return pageDTO;
+    }
+
+    public PageDTO searchPageNumber(String query, String type, int page) {
+        int pagelimit = 5;
+        int blockLimit = 5;
+        Map<String, String> searchParams = new HashMap<>();
+        searchParams.put("query", query);
+        searchParams.put("type", type);
+        int boardCount = boardRepository.searchBoardCount(searchParams);
+        int maxPage = (int)(Math.ceil((double) boardCount/pagelimit));
+
+        int startPage =1;
+        int endPage =maxPage;
+
+        if(maxPage>blockLimit){
+            endPage = page + blockLimit/2;
+            if (endPage>maxPage) endPage=maxPage;
+            startPage = endPage - blockLimit + 1;
+        }
+
+        PageDTO pageDTO = new PageDTO();
+        pageDTO.setPage(page);
+        pageDTO.setMaxPage(maxPage);
+        pageDTO.setStartPage(startPage);
+        pageDTO.setEndPage(endPage);
+        return pageDTO;
     }
 }
