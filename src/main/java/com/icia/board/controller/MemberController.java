@@ -48,7 +48,6 @@ public class MemberController {
     public String login(@ModelAttribute MemberDTO memberDTO,
                         HttpSession session){
         MemberDTO result = memberService.login(memberDTO);
-        System.out.println(result);
         if(result!=null){
             session.setAttribute("member", result);
             return "index";

@@ -29,27 +29,50 @@
                 <button class="btn btn-outline-warning" onclick="update_board()">수정</button>
             </div>
         </c:if>
-        <div id="member-check" class="input-group" style="display: none">
-            <label>삭제하기 위해 비밀번호를 입력해 주세요</label>
-            <span class="input-group-text">비밀번호 확인</span>
-            <input id="password" name="memberPassword" class="form-control" type="password">
+        <div class="input-group mb-3" id="member-check" style="display: none">
+            <span class="input-group-text">비밀번호</span>
+            <input id="password" name="password" type="password" class="form-control">
             <button class="btn btn-danger" onclick="delete_board()">글 삭제</button>
         </div>
         <div class="card p-5">
-                <div class="row mb-4">
-                    <div class="col-12"><h5>제목 : ${board.boardTitle}</h5></div>
-                    <div class="col-4"><h5>작성자 : ${board.boardWriter}</h5></div>
-                    <div class="col-4">작성일 : ${board.createdAt}</div>
-                    <div class="col-4">조회수 : ${board.boardHits}</div>
+            <div class="row mb-4">
+                <div class="col-12"><h5>제목 : ${board.boardTitle}</h5></div>
+                <div class="col-4"><h5>작성자 : ${board.boardWriter}</h5></div>
+                <div class="col-4">작성일 : ${board.createdAt}</div>
+                <div class="col-4">조회수 : ${board.boardHits}</div>
+            </div>
+            <div class="p-3 mb-3"><h6>내용</h6>${board.boardContents}</div>
+            <c:if test="${not empty boardFileList}">
+            <div class="row">
+            <c:forEach items="${boardFileList}" var="boardFile">
+                <div class="col col-sm-6 col-lg-4 col-xl-2">
+                    <img src="${pageContext.request.contextPath}/update/${boardFile.storedFileName}" width="100%">
                 </div>
-                <div class="p-3 mb-3"><h6>내용</h6>${board.boardContents}</div>
-                <c:forEach items="${boardFileList}" var="boardFile">
-                <div class="row">
-                    <div class="col col-sm-6 col-lg-4 col-xl-2">
-                        <img src="${pageContext.request.contextPath}/update/${boardFile.storedFileName}" width="100%">
-                    </div>
+            </c:forEach>
+            </div>
+            </c:if>
+        </div>
+        <div id="comment-write-area">
+            <h4>댓글</h4>
+            <c:choose>
+            <c:when test="${empty sessionScope.member}">
+                <h5>로그인 후 입력가능합니다.</h5>
+            </c:when>
+            <c:otherwise>
+                <div id="comment-header" class="input-group">
+                    <span class="input-group-text">작성자</span>
+                    <input class="form-control" value="${sessionScope.member.memberEmail}" readonly>
                 </div>
-                </c:forEach>
+                <div id="comment-body">
+                    <textarea id="comment-writing"></textarea>
+                </div>
+                <div id="comment-footer">
+                    <button class="btn btn-outline-primary btn-sm" onclick="commnet_make()">댓글 작성</button>
+                </div>
+            </c:otherwise>
+            </c:choose>
+        </div>
+        <div id="comment-area">
         </div>
     </div>
 </div>
@@ -64,20 +87,24 @@
 
     const member_check = () =>{
         const memberCheck = document.getElementById("member-check")
+        memberCheck.style.display = 'flex';
+    }
+
+    const delete_board = () =>{
         const password = document.getElementById("password");
-        if (password.value != ${sessionScope.member.memberPassword}){
+        if (password.value == ""){
+            alert("비밀번호를 입력해주세요")
+        }else if (password.value != '${sessionScope.member.memberPassword}'){
             alert("비밀번호가 틀렸습니다.")
             password.value = "";
             password.focus();
         }else {
-            location.href = "/board/delete?id="+id;
+            if(confirm("정말로 해당 글을 삭제하시겠습니까?")){
+                location.href = "/board/delete?id="+id;
+            }
         }
     }
 
-    const delete_board = () =>{
-        if(confirm("정말로 해당 글을 삭제하시겠습니까?")){
-            location.href = "/board/delete?id="+id;
-        }
-    }
+
 </script>
 </html>

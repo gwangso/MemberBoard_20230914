@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -70,10 +71,12 @@ public class BoardController {
     }
 
     @PostMapping("/update")
-    public @ResponseBody boolean update(@ModelAttribute BoardDTO boardDTO,
-                         @RequestParam(value = "deleteImageList", required = false) List<String> deleteImageList,
-                         Model model) throws IOException {
-        boardService.update(boardDTO,deleteImageList);
-        return true;
+    public String update(@ModelAttribute BoardDTO boardDTO,
+                         @RequestParam(value = "deleteFileList", required = false) List<String> deleteFileList) throws IOException {
+        System.out.println(boardDTO);
+        System.out.println(deleteFileList);
+
+        boardService.update(boardDTO,deleteFileList);
+        return "redirect:/board/detail?id="+boardDTO.getId();
     }
 }

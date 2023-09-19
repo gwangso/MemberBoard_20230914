@@ -59,15 +59,19 @@ public class BoardService {
         boardRepository.delete(id);
     }
 
-    public void update(BoardDTO boardDTO, List<String> deleteImageList) throws IOException {
-        for(String storedFileName : deleteImageList){
+    public void update(BoardDTO boardDTO, List<String> deleteFileList) throws IOException {
+        for(String storedFileName : deleteFileList){
             boardRepository.deleteFile(storedFileName);
-            File file =new File("D\\spring_img\\board_img\\"+storedFileName);
+            File file = new File("D:\\spring_img\\board_img\\"+storedFileName);
             file.delete();
         }
         int countFile = boardRepository.countFile(boardDTO.getId());
-        if(boardDTO.getBoardFiles().isEmpty() && countFile==0){
+
+        if(boardDTO.getBoardFiles().isEmpty() && countFile==0) {
             boardDTO.setFileAttached(0);
+            boardRepository.update(boardDTO);
+        }else if (boardDTO.getBoardFiles().isEmpty() && countFile!=1) {
+            boardDTO.setFileAttached(1);
             boardRepository.update(boardDTO);
         }else {
             boardDTO.setFileAttached(1);

@@ -50,7 +50,7 @@
         delete from board_file_table where storedFileName=#{storedFileName}
     </delete>
 
-    <select id="countFile" parameterType="Long">
+    <select id="countFile" parameterType="Long" resultType="Integer">
         select count(*) from board_file_table where boardId=#{boardId}
     </select>
 </mapper>
