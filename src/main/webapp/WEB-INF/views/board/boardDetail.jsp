@@ -34,14 +34,15 @@
             <input id="password" name="password" type="password" class="form-control">
             <button class="btn btn-danger" onclick="delete_board()">글 삭제</button>
         </div>
-        <div class="card p-5">
+        <div class="card p-5 mb-5">
             <div class="row mb-4">
                 <div class="col-12"><h5>제목 : ${board.boardTitle}</h5></div>
                 <div class="col-4"><h5>작성자 : ${board.boardWriter}</h5></div>
                 <div class="col-4">작성일 : ${board.createdAt}</div>
                 <div class="col-4">조회수 : ${board.boardHits}</div>
             </div>
-            <div class="p-3 mb-3"><h6>내용</h6>${board.boardContents}</div>
+            <hr>
+            <div class="p-3 mb-3">${board.boardContents}</div>
             <c:if test="${not empty boardFileList}">
             <div class="row">
             <c:forEach items="${boardFileList}" var="boardFile">
@@ -52,32 +53,42 @@
             </div>
             </c:if>
         </div>
-        <div id="comment-write-area">
-            <h4>댓글</h4>
+        <div id="comment-write-area" class="card p-4 mb-4">
+            <h5 >댓글</h5>
             <c:choose>
             <c:when test="${empty sessionScope.member}">
-                <h5>로그인 후 입력가능합니다.</h5>
+                <h6>로그인 후 입력가능합니다.</h6>
             </c:when>
             <c:otherwise>
                 <div id="comment-header" class="input-group">
                     <span class="input-group-text">작성자</span>
-                    <input class="form-control" value="${sessionScope.member.memberEmail}" readonly>
+                    <input id="comment-writer" class="form-control" value="${sessionScope.member.memberEmail}" readonly>
                 </div>
-                <div id="comment-body">
-                    <textarea id="comment-writing"></textarea>
+                <div id="comment-body" class="mb-3">
+                    <textarea id="comment-writing" class="form-control"></textarea>
                 </div>
                 <div id="comment-footer">
-                    <button class="btn btn-outline-primary btn-sm" onclick="commnet_make()">댓글 작성</button>
+                    <button class="btn btn-outline-primary btn-sm" onclick="comment_make()">댓글 작성</button>
                 </div>
             </c:otherwise>
             </c:choose>
         </div>
-        <div id="comment-area">
-        </div>
+        <div id="comment-area"></div>
     </div>
 </div>
 <hr>
 <jsp:include page="../footer.jsp"/>
+
+<script id="comment-area-template" type="text/x-handlebars-template">
+    {{#each .}}
+    <div>
+        <span class="mb-3">작성자 : {{commentWriter}}</span><p>{{createdAt}}</p>
+        <p>{{commentContents}}</p>
+        <hr>
+    </div>
+    {{/each}}
+</script>
+
 </body>
 <script>
     const id = '${board.id}'
@@ -105,6 +116,31 @@
         }
     }
 
+    const comment_make = () => {
+        const commentWriter = document.getElementById("comment-writer").value;
+        const commentContents = document.getElementById("comment-writing").value;
+        const boardId = '${board.id}';
+        console.log(commentWriter, commentContents, boardId)
+        $.ajax({
+            type:"post",
+            url:"/comment/save",
+            data:{
+                commentWriter:commentWriter,
+                commentContents:commentContents,
+                boardId:boardId
+            },
+            success:function(data){
+                const comment_template = Handlebars.compile($("#comment-area-template").html());
+                const html_template = comment_template(data);
+                $("#comment-area").html(html_template);
+            },
+            error:function(){
+                alert("댓글작성 실패")
+            }
+
+        })
+
+    }
 
 </script>
 </html>
