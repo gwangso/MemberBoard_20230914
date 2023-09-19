@@ -116,16 +116,18 @@ public class BoardService {
         int blockLimit = 5;
         int boardCount = boardRepository.boardCount();
         int maxPage = (int)(Math.ceil((double) boardCount/pagelimit));
-
         int startPage =1;
         int endPage =maxPage;
 
         if(maxPage>blockLimit){
-            endPage = page + blockLimit/2;
+            endPage = page + (blockLimit/2);
             if (endPage>maxPage) endPage=maxPage;
             startPage = endPage - blockLimit + 1;
+            if (startPage < 1){
+                startPage = 1;
+                endPage = 5;
+            }
         }
-        System.out.printf("%d,%d,%d\n",startPage,endPage,maxPage);
         PageDTO pageDTO = new PageDTO();
         pageDTO.setPage(page);
         pageDTO.setMaxPage(maxPage);
@@ -147,11 +149,14 @@ public class BoardService {
         int endPage =maxPage;
 
         if(maxPage>blockLimit){
-            endPage = page + blockLimit/2;
+            endPage = page + (blockLimit/2);
             if (endPage>maxPage) endPage=maxPage;
             startPage = endPage - blockLimit + 1;
+            if (startPage < 1){
+                startPage = 1;
+                endPage = 5;
+            }
         }
-
         PageDTO pageDTO = new PageDTO();
         pageDTO.setPage(page);
         pageDTO.setMaxPage(maxPage);
