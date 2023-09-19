@@ -14,6 +14,9 @@
     <%-- jquery --%>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 
+    <!-- 핸들바 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+
     <%-- bootstrap, styleSheet --%>
     <link rel="stylesheet" href="/resources/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
@@ -23,57 +26,62 @@
 <jsp:include page="../header.jsp"/>
 <div class="row m-5">
     <div class="col">
-        <c:if test="${board.boardWriter eq sessionScope.member.memberEmail}">
-            <div class="mb-3 text-end">
-                <button class="btn btn-outline-danger" onclick="member_check()">삭제</button>
-                <button class="btn btn-outline-warning" onclick="update_board()">수정</button>
-            </div>
-        </c:if>
-        <div class="input-group mb-3" id="member-check" style="display: none">
-            <span class="input-group-text">비밀번호</span>
-            <input id="password" name="password" type="password" class="form-control">
-            <button class="btn btn-danger" onclick="delete_board()">글 삭제</button>
-        </div>
-        <div class="card p-5 mb-5">
-            <div class="row mb-4">
-                <div class="col-12"><h5>제목 : ${board.boardTitle}</h5></div>
-                <div class="col-4"><h5>작성자 : ${board.boardWriter}</h5></div>
-                <div class="col-4">작성일 : ${board.createdAt}</div>
-                <div class="col-4">조회수 : ${board.boardHits}</div>
-            </div>
-            <hr>
-            <div class="p-3 mb-3">${board.boardContents}</div>
-            <c:if test="${not empty boardFileList}">
-            <div class="row">
-            <c:forEach items="${boardFileList}" var="boardFile">
-                <div class="col col-sm-6 col-lg-4 col-xl-2">
-                    <img src="${pageContext.request.contextPath}/update/${boardFile.storedFileName}" width="100%">
+        <div id="board" class="m-5">
+            <c:if test="${board.boardWriter eq sessionScope.member.memberEmail}">
+                <div class="mb-3 text-end">
+                    <button class="btn btn-outline-danger" onclick="member_check()">삭제</button>
+                    <button class="btn btn-outline-warning" onclick="update_board()">수정</button>
                 </div>
-            </c:forEach>
-            </div>
             </c:if>
+            <div class="input-group mb-3" id="member-check" style="display: none">
+                <span class="input-group-text">비밀번호</span>
+                <input id="password" name="password" type="password" class="form-control">
+                <button class="btn btn-danger" onclick="delete_board()">글 삭제</button>
+            </div>
+            <div class="card p-5">
+                <div class="row mb-4">
+                    <div class="col-12"><h5>제목 : ${board.boardTitle}</h5></div>
+                    <div class="col-4"><h5>작성자 : ${board.boardWriter}</h5></div>
+                    <div class="col-4">작성일 : ${board.createdAt}</div>
+                    <div class="col-4">조회수 : ${board.boardHits}</div>
+                </div>
+                <hr>
+                <div class="p-3 mb-3">${board.boardContents}</div>
+                <c:if test="${not empty boardFileList}">
+                <div class="row">
+                <c:forEach items="${boardFileList}" var="boardFile">
+                    <div class="col col-sm-6 col-lg-4 col-xl-2">
+                        <img src="${pageContext.request.contextPath}/update/${boardFile.storedFileName}" width="100%">
+                    </div>
+                </c:forEach>
+                </div>
+                </c:if>
+            </div>
         </div>
-        <div id="comment-write-area" class="card p-4 mb-4">
-            <h5 >댓글</h5>
-            <c:choose>
-            <c:when test="${empty sessionScope.member}">
-                <h6>로그인 후 입력가능합니다.</h6>
-            </c:when>
-            <c:otherwise>
-                <div id="comment-header" class="input-group">
-                    <span class="input-group-text">작성자</span>
-                    <input id="comment-writer" class="form-control" value="${sessionScope.member.memberEmail}" readonly>
-                </div>
-                <div id="comment-body" class="mb-3">
-                    <textarea id="comment-writing" class="form-control"></textarea>
-                </div>
-                <div id="comment-footer">
-                    <button class="btn btn-outline-primary btn-sm" onclick="comment_make()">댓글 작성</button>
-                </div>
-            </c:otherwise>
-            </c:choose>
+        <hr>
+        <div id="comment" class="m-5">
+            <div id="comment-write-area" class="card p-4 mb-4">
+                <h5 >댓글</h5>
+                <c:choose>
+                <c:when test="${empty sessionScope.member}">
+                    <h6>로그인 후 입력가능합니다.</h6>
+                </c:when>
+                <c:otherwise>
+                    <div id="comment-header" class="input-group">
+                        <span class="input-group-text">작성자</span>
+                        <input id="comment-writer" class="form-control" value="${sessionScope.member.memberEmail}" readonly>
+                    </div>
+                    <div id="comment-body" class="mb-3">
+                        <textarea id="comment-writing" class="form-control"></textarea>
+                    </div>
+                    <div id="comment-footer">
+                        <button class="btn btn-outline-primary btn-sm" onclick="comment_make()">댓글 작성</button>
+                    </div>
+                </c:otherwise>
+                </c:choose>
+            </div>
+            <div id="comment-area" class="m-4"></div>
         </div>
-        <div id="comment-area"></div>
     </div>
 </div>
 <hr>
@@ -81,17 +89,20 @@
 
 <script id="comment-area-template" type="text/x-handlebars-template">
     {{#each .}}
-    <div>
-        <span class="mb-3">작성자 : {{commentWriter}}</span><p>{{createdAt}}</p>
-        <p>{{commentContents}}</p>
-        <hr>
+    <div class="my-3">
+        <span>작성자 : {{commentWriter}}</span>&nbsp;&nbsp;<span>{{createdAt}}</span>
+        <br><br>
+        <p class="ms-4">{{commentContents}}</p>
     </div>
+    <hr>
     {{/each}}
 </script>
 
 </body>
 <script>
     const id = '${board.id}'
+    comment();
+
     const update_board = () =>{
         location.href = "/board/update?id="+id;
     }
@@ -120,13 +131,35 @@
         const commentWriter = document.getElementById("comment-writer").value;
         const commentContents = document.getElementById("comment-writing").value;
         const boardId = '${board.id}';
-        console.log(commentWriter, commentContents, boardId)
+        if(commentContents==""){
+            alert("댓글을 입력해주세요")
+        }else {
+            $.ajax({
+                type:"post",
+                url:"/comment/save",
+                data:{
+                    commentWriter:commentWriter,
+                    commentContents:commentContents,
+                    boardId:boardId
+                },
+                success:function(data){
+                    const comment_template = Handlebars.compile($("#comment-area-template").html());
+                    const html_template = comment_template(data);
+                    $("#comment-area").html(html_template);
+                },
+                error:function(){
+                    alert("댓글작성 실패")
+                }
+            })
+        }
+    }
+
+    function comment(){
+        const boardId = '${board.id}';
         $.ajax({
-            type:"post",
-            url:"/comment/save",
+            type:"get",
+            url:"/comment/findAll",
             data:{
-                commentWriter:commentWriter,
-                commentContents:commentContents,
                 boardId:boardId
             },
             success:function(data){
@@ -135,11 +168,9 @@
                 $("#comment-area").html(html_template);
             },
             error:function(){
-                alert("댓글작성 실패")
+                alert("댓글불러오기 실패")
             }
-
         })
-
     }
 
 </script>

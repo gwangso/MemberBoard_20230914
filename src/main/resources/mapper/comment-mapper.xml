@@ -12,6 +12,6 @@
     <select id="findAll" parameterType="Long" resultType="comment">
         select id, commentWriter, commentContents,
                date_format(createdAt, "%y-%m-%d %H:%i:%s") as createdAt, boardId
-        from commment_table where boardId=#{boardId}
+        from comment_table where boardId=#{boardId}
     </select>
 </mapper>
