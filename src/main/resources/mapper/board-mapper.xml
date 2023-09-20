@@ -67,6 +67,6 @@
     </select>
 
     <select id="searchCount" resultType="Integer" parameterType="java.util.HashMap">
-        select count(*) from board_table where ${type} like #{query}
+        select count(*) from board_table where ${type} like concat('%',#{query},'%')
     </select>
 </mapper>

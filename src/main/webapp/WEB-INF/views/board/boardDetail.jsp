@@ -21,6 +21,10 @@
     <link rel="stylesheet" href="/resources/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/resources/css/style.css">
+
+    <!-- 페이지네이션 사용 라이브러리 -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.2/jquery.twbsPagination.min.js"></script>
+
 </head>
 <body>
 <jsp:include page="../header.jsp"/>
@@ -81,6 +85,7 @@
                 </c:choose>
             </div>
             <div id="comment-area" class="m-4"></div>
+            <div id="pagination" class="pagination justify-content-center"></div>
         </div>
     </div>
 </div>
@@ -101,7 +106,8 @@
 </body>
 <script>
     const id = '${board.id}'
-    comment();
+    let commentPage = 1;
+    getTotal();
 
     const update_board = () =>{
         location.href = "/board/update?id="+id;
@@ -143,9 +149,7 @@
                     boardId:boardId
                 },
                 success:function(data){
-                    const comment_template = Handlebars.compile($("#comment-area-template").html());
-                    const html_template = comment_template(data);
-                    $("#comment-area").html(html_template);
+                    getTotal()
                 },
                 error:function(){
                     alert("댓글작성 실패")
@@ -160,7 +164,8 @@
             type:"get",
             url:"/comment/findAll",
             data:{
-                boardId:boardId
+                boardId:boardId,
+                commentPage:commentPage
             },
             success:function(data){
                 const comment_template = Handlebars.compile($("#comment-area-template").html());
@@ -173,5 +178,36 @@
         })
     }
 
+    $('#pagination').twbsPagination({
+        totalPages:10,	// 총 페이지 번호 수
+        visiblePages: 5,	// 하단에서 한번에 보여지는 페이지 번호 수
+        startPage : 1, // 시작시 표시되는 현재 페이지
+        initiateStartPageClick: false,	// 플러그인이 시작시 페이지 버튼 클릭 여부 (default : true)
+        first : '<<',	// 페이지네이션 버튼중 처음으로 돌아가는 버튼에 쓰여 있는 텍스트
+        prev : '<',	// 이전 페이지 버튼에 쓰여있는 텍스트
+        next : '>',	// 다음 페이지 버튼에 쓰여있는 텍스트
+        last : '>>',	// 페이지네이션 버튼중 마지막으로 가는 버튼에 쓰여있는 텍스트
+        onPageClick: function (event, curPage) { //curPage는 클릭한 페이지의 값이 들어간다.
+            commentPage=curPage;
+            comment();
+        }
+    });
+
+    function getTotal(){
+        const boardId = '${board.id}'
+        $.ajax({
+            type:"get",
+            url:"/comment/count",
+            data:{boardId:boardId},
+            success:function(data){
+                if(data==0){
+                    $("#comment-area").html("<h3 class='text-center'>댓글이 없습니다.</h3>")
+                }else {
+                    const totalPages = Math.ceil(data/5);
+                    $("#pagination").twbsPagination("changeTotalPages", totalPages, 1)
+                }
+            }
+        });
+    }
 </script>
 </html>

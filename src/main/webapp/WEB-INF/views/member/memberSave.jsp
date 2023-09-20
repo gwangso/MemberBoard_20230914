@@ -53,13 +53,21 @@
                             <div class="form-floating">
                                 <input type="password" id="password" name="memberPassword" class="form-control"
                                        onkeyup="password_check(this.value)">
-                                <label for="member-email" id="password-check" style="color:gray">영어,숫자,특수문자로 조합된 8자리 이상의
+                                <label for="member-email" id="password-label" style="color:gray">영어,숫자,특수문자로 조합된 8자리 이상의
                                     비밀번호를 입력해주세요</label>
                             </div>
                         </div>
                         <div class="input-group mb-5">
+                            <span class="input-group-text"><p style="color: red">*</p>비밀번호 확인</span>
+                            <div class="form-floating">
+                                <input type="password" id="password-check" name="memberPasswordCheck" class="form-control"
+                                       onkeyup="password_double_check(this.value)">
+                                <label for="member-email" id="password-check-label" style="color:gray"></label>
+                            </div>
+                        </div>
+                        <div class="input-group mb-5">
                             <span class="input-group-text"><p style="color: red">*</p>이름</span>
-                            <input name="memberName" class="form-control">
+                            <input name="memberName" id="member-name" class="form-control">
                         </div>
                         <div class="input-group">
                             <span class="input-group-text">전화번호</span>
@@ -83,6 +91,8 @@
 <script>
     let duplicateCheck = false;
     let passwordCheck = false;
+    let passwordDoubleCheck = false;
+
 
     const check_duplicate = (memberEmail) => {
         const duplicateLabel = document.getElementById("duplicate-check")
@@ -112,13 +122,13 @@
 
     const password_check = (memberPassword) => {
         const reg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
-        const passwordLabel = document.getElementById("password-check")
+        const passwordLabel = document.getElementById("password-label")
         if (memberPassword == "") {
             passwordCheck = false;
             passwordLabel.innerText = "영어,숫자,특수문자로 조합된 8자리 이상의 비밀번호를 입력해주세요.";
             passwordLabel.style.color = "gray";
         } else if (reg.test(memberPassword)) {
-            passwordCheck = false;
+            passwordCheck = true;
             passwordLabel.innerText = "사용가능한 비밀번호입니다.";
             passwordLabel.style.color = "green";
         } else {
@@ -128,10 +138,51 @@
         }
     }
 
+    const password_double_check = (passwordCheck) =>{
+        const password = document.getElementById("password").value;
+        const passwordCheckLabel = document.getElementById("password-check-label");
+        if(password == passwordCheck){
+            passwordDoubleCheck = true;
+            passwordCheckLabel.innerText = "비밀번호 확인";
+            passwordCheckLabel.style.color = "green";
+        }else {
+            passwordDoubleCheck = false;
+            passwordCheckLabel.innerText = "비밀번호가 다릅니다.";
+            passwordCheckLabel.style.color = "red";
+        }
+    }
+
     const save_member = () => {
         const memberSaveForm = document.querySelector("#save-form");
-        if (confirm("해당 정보로 가입하시겠습니까?")) {
-            memberSaveForm.submit();
+        const memberEmail = document.getElementById("member-email");
+        const memberPassword = document.getElementById("password");
+        const memberPasswordCheck = document.getElementById("password-check");
+        const memberName = document.getElementById("member-name");
+        if (memberEmail.value == ""){
+            alert("아이디를 입력해주세요.")
+            memberEmail.focus();
+        }else if(!duplicateCheck){
+            alert("아이디 중복확인이 필요합니다.")
+            memberEmail.focus();
+        }else if(memberPassword.value == ""){
+            alert("비밀번호를 입력해주세요.")
+            memberPassword.focus();
+        }else if(!passwordCheck){
+            alert("비밀번호가 형식에 맞지 않습니다.")
+            memberPassword.focus();
+        }else if(memberPasswordCheck.value == ""){
+            alert("비밀번호 확인해주세요.")
+            memberPasswordCheck.focus();
+        }else if(!passwordDoubleCheck){
+            alert("비밀번호를 확인해주세요.")
+            memberPasswordCheck.focus();
+        }else if(memberName.value == ""){
+            alert("이름을 입력해주세요.")
+            memberName.focus();
+        }else{
+            if (confirm("해당 정보로 가입하시겠습니까?")) {
+                memberSaveForm.submit();
+            }
         }
     }
 

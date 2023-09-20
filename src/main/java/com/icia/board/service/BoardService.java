@@ -128,6 +128,7 @@ public class BoardService {
                 endPage = 5;
             }
         }
+
         PageDTO pageDTO = new PageDTO();
         pageDTO.setPage(page);
         pageDTO.setMaxPage(maxPage);
@@ -157,6 +158,7 @@ public class BoardService {
                 endPage = 5;
             }
         }
+
         PageDTO pageDTO = new PageDTO();
         pageDTO.setPage(page);
         pageDTO.setMaxPage(maxPage);

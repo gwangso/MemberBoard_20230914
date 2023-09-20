@@ -22,19 +22,34 @@
     <jsp:include page="header.jsp"/>
     <div class="row m-5">
         <div class="col">
-            <h1>메인</h1>
-            <div class="row justify-content-center">
-                <div class="col col-md-8 col-xl-6">
-                    <div class="input-group">
-                        <span class="input-group-text">글찾기</span>
-                        <input class="form-control">
-                        <button class="btn btn-primary"></button>
+            <form id="search-form" class="" method="get" action="/board/list">
+                <div class="row mb-3 justify-content-center">
+                    <div class="col-auto">
+                        <select id="type" class="form-select form-select-lg" aria-label="Default select example">
+                            <option value="boardTitle">제목</option>
+                            <option value="boardWriter">작성자</option>
+                        </select>
+                    </div>
+                    <div class="col col-md-6 col-xl-4">
+                        <div class="input-group">
+                            <span class="input-group-text">검색어</span>
+                            <input id="query" class="form-control form-control-lg">
+                            <button class="btn btn-primary" type="submit">찾기</button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
     <hr>
     <jsp:include page="footer.jsp"/>
 </body>
+<script>
+    $("#search-form").on("submit",function(event){
+        event.preventDefault();
+        const query = $("#query").val();
+        const type = $("#type").val();
+        location.href = "/board/list?query="+query+"&type="+type+"&page=1";
+    });
+</script>
 </html>
