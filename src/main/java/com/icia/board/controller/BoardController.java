@@ -22,7 +22,7 @@ public class BoardController {
     @GetMapping("/save")
     public String save(HttpSession session){
         if(session.getAttribute("member")==null){
-            return "redirect:/member/login";
+            return "redirect:/member/login?url=/board/save";
         }else {
             return "board/boardSave";
         }

@@ -40,26 +40,42 @@ public class MemberController {
     }
 
     @GetMapping("/login")
-    public String login(){
+    public String login(@RequestParam(value="url",required = false) String url,
+                        Model model){
+        model.addAttribute("url",url);
         return "member/login";
     }
 
     @PostMapping("/login")
     public String login(@ModelAttribute MemberDTO memberDTO,
+                        @RequestParam(value="url",required = false) String url,
                         HttpSession session){
         MemberDTO result = memberService.login(memberDTO);
         if(result!=null){
             session.setAttribute("member", result);
-            return "index";
+            if (url.equals("")){
+                return "index";
+            }else{
+                return "redirect:"+url;
+            }
         }else {
-            return "member/login";
+            return "redirect:/member/login?url="+url;
         }
     }
 
     @GetMapping("/logout")
-    public String logout(HttpSession session){
+    public String logout(@RequestParam(value="pathname",required = false) String pathname,
+                         @RequestParam(value="parameter",required = false) String parameter,
+                         HttpSession session){
         session.removeAttribute("member");
-        return "redirect:/";
+        String url = pathname+parameter;
+        if (pathname.equals("/board/saave")) {
+            return "redirect:/";
+        }else if (pathname.equals("/member/detail")){
+            return "redirect:/";
+        }else {
+            return "redirect:"+url;
+        }
     }
 
     @GetMapping("/list")

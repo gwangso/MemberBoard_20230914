@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 반드시 작성! -->
+<mapper namespace="Favorite">
+    <select id="read" resultType="favorite" parameterType="java.util.HashMap">
+        select * from favorite_table where boardId=#{boardId} and memberId=#{memberId}
+    </select>
+    <insert id="insert" parameterType="java.util.HashMap">
+        insert into favorite_table(boardId, memberId)
+        values (#{boardId}, #{memberId})
+    </insert>
+
+    <delete id="delete" parameterType="java.util.HashMap">
+        delete from favorite_table where boardId=#{boardId} and memberId=#{memberId}
+    </delete>
+</mapper>

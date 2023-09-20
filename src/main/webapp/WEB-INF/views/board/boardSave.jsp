@@ -23,19 +23,19 @@
 <div class="row m-5">
     <div class="col">
         <form id="board-save" name="boardSave" method="post" action="/board/save" enctype="multipart/form-data">
-            <div class="input-group">
+            <div class="input-group mb-3">
                 <span class="input-group-text">제목</span>
                 <input name="boardTitle" type="text" class="form-control">
             </div>
-            <div class="input-group">
+            <div class="input-group mb-3">
                 <span class="input-group-text">작성자</span>
                 <input name="boardWriter" type="text" class="form-control" value="${sessionScope.member.memberEmail}" readonly>
             </div>
-            <div class="input-group">
+            <div class="input-group mb-3">
                 <span class="input-group-text">내용</span>
-                <textarea name="boardContents" type="text" class="form-control"></textarea>
+                <textarea name="boardContents" type="text" class="form-control" style="height: 200px"></textarea>
             </div>
-            <input name="boardFiles" type="file" class="form-control" multiple>
+            <input name="boardFiles" type="file" class="form-control mb-5" multiple>
             <div>
                 <input type="submit" class="btn btn-primary" value="글작성">
                 <input type="button" class="btn btn-secondary" value="취소" onclick="to_list()">

@@ -25,6 +25,8 @@
     <!-- 페이지네이션 사용 라이브러리 -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.2/jquery.twbsPagination.min.js"></script>
 
+    <%--부트스트랩 아이콘--%>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body>
 <jsp:include page="../header.jsp"/>
@@ -60,6 +62,10 @@
                 </c:forEach>
                 </div>
                 </c:if>
+                <hr>
+                <div id="favorite-area">
+                    <i id="heart" class="bi bi-heart" style="color: red; cursor: pointer;"></i>
+                </div>
             </div>
         </div>
         <hr>
@@ -108,6 +114,7 @@
     const id = '${board.id}'
     let commentPage = 1;
     getTotal();
+    getFavorite();
 
     const update_board = () =>{
         location.href = "/board/update?id="+id;
@@ -150,6 +157,7 @@
                 },
                 success:function(data){
                     getTotal()
+                    commentContents.value = "";
                 },
                 error:function(){
                     alert("댓글작성 실패")
@@ -208,6 +216,69 @@
                 }
             }
         });
+    }
+
+    $("#favorite-area").on("click", ".bi-heart", function(){
+        const boardId = '${board.id}';
+        const memberId = '${sessionScope.member.id}'
+        if(${empty sessionScope.member}){
+            alert("로그인이 필요한 기능입니다.")
+            location.href = "/member/login?url=/board/detail?id="+boardId;
+        }else{
+            $.ajax({
+                type:"post",
+                url:"/favorite/insert",
+                data:{boardId:boardId,
+                    memberId:memberId
+                },
+                success:function(){
+                    getFavorite();
+                },
+                error:function(){
+                    alert("좋아요 실패")
+                }
+            })
+        }
+    })
+
+    $("#favorite-area").on("click", ".bi-heart-fill", function(){
+        const boardId = '${board.id}';
+        const memberId = '${sessionScope.member.id}'
+        $.ajax({
+            type:"post",
+            url:"/favorite/delete",
+            data:{boardId:boardId,
+                memberId:memberId
+            },
+            success:function(){
+                getFavorite();
+            },
+            error:function(){
+                alert("좋아요해제 실패")
+            }
+        })
+
+    })
+
+    function getFavorite(){
+        const boardId = '${board.id}';
+        const memberId = '${sessionScope.member.id}'
+        $.ajax({
+            data:"get",
+            url:"/favorite/read",
+            data:{boardId:boardId,
+                memberId:memberId},
+            success:function(data){
+                if(data==1){
+                    $("#heart").removeClass("bi-heart").addClass("bi-heart-fill");
+                }else if(data==0){
+                    $("#heart").removeClass("bi-heart-fill").addClass("bi-heart");
+                }
+            },
+            error:function (){
+                alert("좋아요 가져오기 실패")
+            }
+        })
     }
 </script>
 </html>

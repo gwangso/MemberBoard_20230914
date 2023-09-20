@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="/resources/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/resources/css/style.css">
+
 </head>
 <body>
 <jsp:include page="../header.jsp"/>
@@ -48,14 +49,15 @@
                                 <label for="member-email" id="duplicate-check" style="color:gray">이메일을 입력해주세요</label>
                             </div>
                         </div>
-                        <div class="input-group mb-5">
+                        <div class="input-group">
                             <span class="input-group-text"><p style="color: red">*</p>비밀번호</span>
                             <div class="form-floating">
                                 <input type="password" id="password" name="memberPassword" class="form-control"
                                        onkeyup="password_check(this.value)">
-                                <label for="member-email" id="password-label" style="color:gray">영어,숫자,특수문자로 조합된 8자리 이상의
-                                    비밀번호를 입력해주세요</label>
                             </div>
+                        </div>
+                        <div class="form-text mb-5" id="password-label" style="color:gray">
+                            영어,숫자,특수문자로 조합된 8자리 이상의 비밀번호를 입력해주세요
                         </div>
                         <div class="input-group mb-5">
                             <span class="input-group-text"><p style="color: red">*</p>비밀번호 확인</span>

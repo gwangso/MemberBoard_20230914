@@ -28,6 +28,10 @@
             </div>
             <div class="card p-5 " style="width: 500px">
                 <form action="/member/login" id="login-form" method="post">
+                    <div class="input-group" style="display: none">
+                        <span class="input-group-text">돌아갈 주소</span>
+                        <input type="text" name="url" class="form-control" value="${url}">
+                    </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text">아이디</span>
                         <input type="text" name="memberEmail" class="form-control">
@@ -47,4 +51,5 @@
 <hr>
 <jsp:include page="../footer.jsp"/>
 </body>
+
 </html>
