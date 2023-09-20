@@ -71,7 +71,11 @@ public class MemberController {
         String url = pathname+parameter;
         if (pathname.equals("/board/saave")) {
             return "redirect:/";
-        }else if (pathname.equals("/member/detail")){
+        }else if (pathname.equals("/member/detail")) {
+            return "redirect:/";
+        }else if (pathname.equals("/member/update")) {
+            return "redirect:/";
+        }else if (pathname.equals("/member/list")){
             return "redirect:/";
         }else {
             return "redirect:"+url;

@@ -59,9 +59,9 @@ public class BoardController {
     @GetMapping("/detail")
     public String findById(@RequestParam("id") Long id,
                            Model model){
+        boardService.updateHits(id);
         BoardDTO boardDTO = boardService.findById(id);
         model.addAttribute("board", boardDTO);
-        boardService.updateHits(id);
         List<BoardFileDTO> boardFileDTOList = boardService.findFileById(id);
         model.addAttribute("boardFileList", boardFileDTOList);
         return "board/boardDetail";

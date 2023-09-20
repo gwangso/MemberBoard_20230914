@@ -56,7 +56,7 @@
                 <c:if test="${not empty boardFileList}">
                 <div class="row">
                 <c:forEach items="${boardFileList}" var="boardFile">
-                    <div class="col col-sm-6 col-lg-4 col-xl-2">
+                    <div class="col-12 col-sm-6 col-lg-4 col-xl-2 mb-3">
                         <img src="${pageContext.request.contextPath}/update/${boardFile.storedFileName}" width="100%">
                     </div>
                 </c:forEach>
@@ -210,7 +210,9 @@
             success:function(data){
                 if(data==0){
                     $("#comment-area").html("<h3 class='text-center'>댓글이 없습니다.</h3>")
+                    $("#pagination").hide();
                 }else {
+                    $("#pagination").show();
                     const totalPages = Math.ceil(data/5);
                     $("#pagination").twbsPagination("changeTotalPages", totalPages, 1)
                 }

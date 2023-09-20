@@ -49,7 +49,7 @@
         event.preventDefault();
         const query = $("#query").val();
         const type = $("#type").val();
-        location.href = "/board/list?query="+query+"&type="+type+"&page=1";
+        location.href = "/board/list?page=1&query="+query+"&type="+type;
     });
 </script>
 </html>
